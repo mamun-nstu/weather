@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    
+    <title>Weather Status</title>
+</head>
+<body>
+    <div class="container">
+        <form class="col-md-6 m-auto form pb-2">
+            <div class="input-group">
+                <input id="city" type="text" class="form-control" placeholder="Enter a location for Weather ...">
+                <div class="input-group-append">
+                    <button id="submit" type="button" class="btn btn-primary">Search</button>
+                </div>
+            </div>
+        </form>
+
+        <!----------------------------------- weather info display ------------------------------>
+
+        <div class="weather-status text-white text-center">
+            <div id="icon"><!-- <img src="https://openweathermap.org/img/wn/10d@2x.png" alt=> --></div>
+            <h1 id="name" class="mb-4"></h1>
+            <h5 class="lead"><span id="temperature"></span></h5>
+            <h5 class="lead"><span id="humidity"></span></h5>
+            <h5 class="lead"><span id="pressure"></span></h5>
+            <h5 class="lead"><span id="wind"></span></h5>
+            <h5 class="lead"><span id="description"></span></h5>
+        </div>
+    </div>
+
+    <script>
+        let city = document.getElementById("city")
+        let submit = document.getElementById("submit")
+        let nameValue = document.getElementById("name")
+        let temp = document.getElementById("temperature")
+        let desc = document.getElementById("desc")
+        let icon = document.getElementById("icon")
+        let humidity = document.getElementById("humidity")
+        let pressure = document.getElementById("pressure")
+        let wind = document.getElementById("wind")
+        let description = document.getElementById("description")
+
+        submit.addEventListener("click",function(){
+            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city.value}&appid=e18f31199117b6e0cd2e3ad96c922b3a`)
+            .then (res => res.json())
+            .then (data => {
+                const temperature = data.main.temp;
+                const weather_humidity = data.main.humidity;
+                const weather_pressure = data.main.pressure;
+                const wind_speed = data.wind.speed;
+                const weather_description = data.weather[0].description;
+
+                nameValue.innerHTML = data.name;
+                temp.innerHTML = ` Temperature : ${(temperature-273.15).toFixed(2)}&deg; C `;
+                humidity.innerHTML = ` Humidity : ${weather_humidity}% `;
+                pressure.innerHTML = ` Pressure : ${weather_pressure} mbar`;
+                wind.innerHTML = ` Wind Speed : ${wind_speed} km/h`;
+                description.innerHTML = ` Weather Summery : ${weather_description}`;
+                img = data.weather[0].icon;
+                icon.innerHTML = `<img src="https://openweathermap.org/img/wn/${img}@2x.png" alt=>`
+            })
+            .catch (err => alert("Enter City Name Correctly!!!"))
+        })
+    </script>
+</body>
+</html>
